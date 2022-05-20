@@ -116,50 +116,61 @@
                     <div class="col-span-12">
                         <div class="text-xl font-bold text-primary mb-8">Transaksi Pembeli</div>
                         <div class="flex flex-col space-y-4">
-                            <div class="bg-secondary p-4 rounded-2xl">
-                                <div class="flex space-x-4">
-                                    <div class="p-2 w-14 rounded-xl shadow-md bg-white text-center">
-                                        <div class="font-bold text-md">05</div>
-                                        <div class="text-sm text-gray-500 -mt-1">Sel</div>
-                                    </div>
-                                    <div class="flex flex-col justify-center">
-                                        <div class="font-bold text-primary text-md">1 Bubur Ayam</div>
-                                        <div class="text-gray-500 text-sm">Bli Wayan - <span
-                                                class="font-semibold">18:18
-                                                WITA</span></div>
-                                    </div>
-                                </div>
-                            </div>
 
-                            <div class="bg-secondary p-4 rounded-2xl">
-                                <div class="flex space-x-4">
-                                    <div class="p-2 w-14 rounded-xl shadow-md bg-white text-center">
-                                        <div class="font-bold text-md">05</div>
-                                        <div class="text-sm text-gray-500 -mt-1">Sel</div>
-                                    </div>
-                                    <div class="flex flex-col justify-center">
-                                        <div class="font-bold text-primary text-md">1 Bubur Ayam</div>
-                                        <div class="text-gray-500 text-sm">Bli Wayan - <span
-                                                class="font-semibold">18:18
-                                                WITA</span></div>
-                                    </div>
-                                </div>
-                            </div>
+                            @foreach ($orders as $order)
+                                <div class="bg-secondary p-4 rounded-2xl">
+                                    <div class="flex space-x-4">
+                                        <div class="p-2 w-14 rounded-xl shadow-md bg-white text-center">
+                                            <div class="font-bold text-md">
+                                                @php
+                                                    $dateGet = $order->updated_at;
+                                                    $date = date('d', strtotime($dateGet));
+                                                @endphp
+                                                {{ $date }}
+                                            </div>
+                                            <div class="text-sm text-gray-500 -mt-1">
+                                                @php
+                                                    $dateGet = $order->updated_at;
+                                                    $date = date('D', strtotime($dateGet));
+                                                @endphp
+                                                {{ $date }}</div>
+                                        </div>
+                                        <div class="flex flex-col justify-center">
+                                            <div class="font-bold text-primary text-md">
+                                                @php
+                                                    $totalOrder = DB::table('order_menus')
+                                                        ->where('invoice', $order->invoice)
+                                                        ->count();
+                                                @endphp
+                                                {{ $totalOrder }} Bubur Ayam
+                                            </div>
+                                            <div class="text-gray-500 text-sm">
 
-                            <div class="bg-secondary p-4 rounded-2xl">
-                                <div class="flex space-x-4">
-                                    <div class="p-2 w-14 rounded-xl shadow-md bg-white text-center">
-                                        <div class="font-bold text-md">05</div>
-                                        <div class="text-sm text-gray-500 -mt-1">Sel</div>
-                                    </div>
-                                    <div class="flex flex-col justify-center">
-                                        <div class="font-bold text-primary text-md">1 Bubur Ayam</div>
-                                        <div class="text-gray-500 text-sm">Bli Wayan - <span
-                                                class="font-semibold">18:18
-                                                WITA</span></div>
+                                                @php
+                                                    $user = DB::table('users')
+                                                        ->where('id', $order->user_id)
+                                                        ->first();
+                                                @endphp
+                                                {{ $user->name }}
+
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    fill="currentColor" class="inline-flex bi bi-dot"
+                                                    viewBox="0 0 16 16">
+                                                    <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z" />
+                                                </svg>
+
+                                                <span class="font-semibold">
+
+                                                    @php
+                                                        $dateGet = $order->updated_at;
+                                                        $date = date('H:i', strtotime($dateGet));
+                                                    @endphp
+                                                    {{ $date }} WITA</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                     {{-- Transaction --}}

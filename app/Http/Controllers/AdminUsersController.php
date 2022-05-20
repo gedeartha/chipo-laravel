@@ -99,14 +99,17 @@ class AdminUsersController extends Controller
             ->with([
                 'error' => 'Meja tidak tersedia/telah digunakan pelanggan lain.'
             ]);
-        }
-        
+        } 
     }
     
     public function edit($id)
     {
         $user = DB::table('users')->where('id', $id)->first();
-        return view('admin.users.edit', ['user' => $user]);
+        
+        $tables = DB::Table('tables')
+            ->where('status', 'tersedia')
+            ->get();
+        return view('admin.users.edit', ['user' => $user, 'tables' => $tables]);
     }
 
     public function update(Request $request, $id) 

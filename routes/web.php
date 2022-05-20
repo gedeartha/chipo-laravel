@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminLogoutController;
 use App\Http\Controllers\AdminOrderController;
 use App\Http\Controllers\AdminReservationController;
 use App\Http\Controllers\AdminUsersController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\TableController;
 use App\Http\Controllers\ToppingController;
@@ -31,17 +32,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    if (session()->get('login') == null) {
-        return view('auth.login');
-    }
-
-    return view('home');
-})->name('index');
+Route::get('/', [HomeController::class, 'index'])->name('index');
 
 Route::get('login', [UserAuthController::class, 'index'])->name('login.index');
 Route::post('login/store', [UserAuthController::class, 'store'])->name('login.store');
 Route::post('login/logout', [UserAuthController::class, 'logout'])->name('login.logout');
+Route::post('register/store', [UserAuthController::class, 'register'])->name('register.store');
 Route::get('logout', [UserAuthController::class, 'navLogout'])->name('navLogout');
 
 Route::get('/dashboard', function () {
