@@ -19,19 +19,22 @@ class AdminLoginController extends Controller
             'password' => 'required',
         ]);
 
+        $email = $request->email . '@chipo.com';
+
         $login = DB::table('admins')
-        ->where('email', $request->email)
+        ->where('email', $email)
         ->where('password', $request->password)
         ->count();
 
         if ($login > 0) {   
-            $admin = DB::table('admins')->where('email', $request->email)->first();
+            $admin = DB::table('admins')->where('email', $email)->first();
 
             session([
                 'login' => 'true',
                 'id_admin' => $admin->id,
                 'name' => $admin->name, 
                 'email' => $admin->email,
+                'role' => $admin->role,
             ]);
             
             return redirect()

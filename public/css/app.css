@@ -1208,11 +1208,11 @@ select {
 .border-t-2 {
   border-top-width: 2px;
 }
-.border-t {
-  border-top-width: 1px;
-}
 .border-l-0 {
   border-left-width: 0px;
+}
+.border-t {
+  border-top-width: 1px;
 }
 .border-r {
   border-right-width: 1px;
@@ -2067,14 +2067,14 @@ select {
     color: rgb(255 255 255 / var(--tw-text-opacity));
   }
 
-  .dark\:text-gray-500 {
-    --tw-text-opacity: 1;
-    color: rgb(107 114 128 / var(--tw-text-opacity));
-  }
-
   .dark\:text-gray-300 {
     --tw-text-opacity: 1;
     color: rgb(209 213 219 / var(--tw-text-opacity));
+  }
+
+  .dark\:text-gray-500 {
+    --tw-text-opacity: 1;
+    color: rgb(107 114 128 / var(--tw-text-opacity));
   }
 
   .odd\:dark\:bg-gray-800:nth-child(odd) {

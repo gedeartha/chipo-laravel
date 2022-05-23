@@ -14,10 +14,11 @@ class AdminUsersController extends Controller
     {   
         if (session()->get('login') == null) {
             return view('admin.login');
-        } else {
-            $users = User::latest()->get();
-            return view('admin.users.index', ['users' => $users]);
         }
+        
+        $users = User::latest()->get();
+
+        return view('admin.users.index', ['users' => $users]);
 
     }
     
@@ -25,9 +26,14 @@ class AdminUsersController extends Controller
     {   
         if (session()->get('login') == null) {
             return view('admin.login');
-        } else {
-            return view('admin.users.add');
         }
+        
+        $tables = DB::Table('tables')
+            ->where('status', 'tersedia')
+            ->get();
+        
+        return view('admin.users.add', ['tables' => $tables]);
+        
 
     }
     

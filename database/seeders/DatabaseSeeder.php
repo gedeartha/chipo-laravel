@@ -23,6 +23,5 @@ class DatabaseSeeder extends Seeder
         $this->call(TimeSeeder::class);
         $this->call(ReservationTableSeeder::class);
         $this->call(AdminUsersSeeder::class);
-        \App\Models\User::factory(10)->create();
     }
 }

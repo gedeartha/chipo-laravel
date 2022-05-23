@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminAdminsController;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\AdminLogoutController;
 use App\Http\Controllers\AdminOrderController;
@@ -72,10 +73,19 @@ Route::put('invoice-order/{invoice}/update', [UserInvoiceController::class, 'upd
 Route::get('history-reservation', [UserHistoryReservationController::class, 'index'])->name('history.reservation.index');
 Route::post('history-reservation', [UserHistoryReservationController::class, 'search'])->name('history.reservation.search');
 
+Route::get('admin/', function () {
+    return redirect('admin/login');
+});
 
 Route::get('admin/login', [AdminLoginController::class, 'index'])->name('admin.login.index');
 Route::post('admin/login/store', [AdminLoginController::class, 'store'])->name('admin.login.store');
 Route::get('admin/logout', [AdminLogoutController::class, 'index'])->name('admin.logout');
+
+Route::get('admin/admins', [AdminAdminsController::class, 'index'])->name('admin.admins.index');
+Route::get('admin/admins/add', [AdminAdminsController::class, 'add'])->name('admin.admins.add');
+Route::post('admin/admins/store', [AdminAdminsController::class, 'store'])->name('admin.admins.store');
+Route::get('admin/admins/edit/{id}', [AdminAdminsController::class, 'edit'])->name('admin.admins.edit');
+Route::put('admin/admins/edit/{id}/update', [AdminAdminsController::class, 'update'])->name('admin.admins.update');
 
 Route::get('admin/users', [AdminUsersController::class, 'index'])->name('admin.users.index');
 Route::get('admin/users/add', [AdminUsersController::class, 'add'])->name('admin.users.add');

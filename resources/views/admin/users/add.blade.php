@@ -62,8 +62,37 @@
                                 <select id="table" name="table"
                                     class="bg-gray-50 border mt-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                                     required autofocus>
-                                    <option>1</option>
-                                    <option>2</option>
+
+                                    <option value="">Pilih Meja
+                                    </option>
+
+                                    @foreach ($tables as $table)
+                                        @php
+                                            $now = date('Y-m-d');
+                                            
+                                            $tableCek = DB::table('reservation_tables')
+                                                ->where('table_id', $table->table)
+                                                ->where('reservation_date', $now)
+                                                ->count();
+                                            
+                                            $tomorrow = date('Y-m-d', strtotime('+1 day'));
+                                            
+                                            //Cek meja jika telah digunakan hari ini
+                                            $tableOrderCek = DB::table('orders')
+                                                ->where('table', $table->table)
+                                                ->where('updated_at', '>=', $now)
+                                                ->where('updated_at', '<', $tomorrow)
+                                                ->count();
+                                        @endphp
+
+                                        @if ($tableCek == 1 || $tableOrderCek == 1)
+                                            <option value="{{ $table->table }}" hidden="">{{ $table->table }}
+                                            </option>
+                                        @else
+                                            <option value="{{ $table->table }}">{{ $table->table }}
+                                            </option>
+                                        @endif
+                                    @endforeach
                                 </select>
 
                                 @error('status')

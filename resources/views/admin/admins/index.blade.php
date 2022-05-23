@@ -6,9 +6,9 @@
         {{-- Content --}}
         <div class="col-span-8 sm:col-span-9 lg:col-span-10 p-10">
             <div class="flex justify-between">
-                <div class="font-extrabold text-3xl text-primary mb-4">Daftar User</div>
+                <div class="font-extrabold text-3xl text-primary mb-4">Daftar Admin</div>
 
-                <a href="{{ route('admin.users.add') }}">
+                <a href="{{ route('admin.admins.add') }}">
                     <x-button-small>
                         <div class="flex justify-center items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
@@ -18,7 +18,7 @@
                                     clip-rule="evenodd" />
                             </svg>
                             <div class="mr-2">
-                                User
+                                Admin
                             </div>
                         </div>
                     </x-button-small>
@@ -49,6 +49,9 @@
                                     Nama
                                 </th>
                                 <th scope="col" class="px-6 py-3">
+                                    Tanggal Didaftarkan
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     Email
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -61,21 +64,28 @@
                         </thead>
                         <tbody>
 
-                            @forelse ($users as $user)
+                            @forelse ($admins as $admin)
                                 <tr
                                     class="border-b odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
                                     <th scope="row"
                                         class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap capitalize">
-                                        {{ $user->name }}
+                                        {{ $admin->name }}
                                     </th>
                                     <td class="px-6 py-4">
-                                        {{ $user->email }}
+                                        @php
+                                            $dateGet = $admin->created_at;
+                                            $date = date('d M Y H:i', strtotime($dateGet));
+                                        @endphp
+                                        {{ $date }}
                                     </td>
                                     <td class="px-6 py-4">
-                                        {{ $user->password }}
+                                        {{ $admin->email }}
+                                    </td>
+                                    <td class="px-6 py-4">
+                                        {{ $admin->password }}
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('admin.users.edit', $user->id) }}">
+                                        <a href="{{ route('admin.admins.edit', $admin->id) }}">
                                             <button
                                                 class="py-1.5 px-2.5 text-center text-sm font-semibold text-blue-700 rounded-lg border border-blue-700">Edit</button>
                                         </a>
@@ -88,7 +98,7 @@
                                     <th colspan="4" scope="row"
                                         class="px-6 py-4 font-medium whitespace-nowrap text-center">
                                         <div class="my-6 text-gray-400">
-                                            Daftar user kosong
+                                            Daftar admin kosong
                                         </div>
                                     </th>
                                 </tr>

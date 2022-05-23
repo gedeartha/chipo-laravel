@@ -13,7 +13,9 @@ class AdminOrderController extends Controller
         if (session()->get('login') == null) {
             return view('admin.login');
         } else {
-            $orders = Order::latest()->get();
+            $orders = DB::table('orders')
+                ->where('status', '!=', 'Pending')
+                ->get();
             return view('admin.history-order', ['orders' => $orders]);
         }
     }
