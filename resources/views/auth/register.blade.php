@@ -1,9 +1,9 @@
 <x-guest-layout>
-    <div class="grid grid-cols-2 gap-4">
-        <div class="relative h-screen p-5">
+    <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-4">
+        <div class="hidden lg:block relative h-screen p-5">
             <img class="w-full h-full rounded-xl" src="/img/register-image.png" alt="Chipo" />
         </div>
-        <div class="flex flex-col items-center justify-center">
+        <div class="flex flex-col items-center justify-center h-screen">
             <div class="mb-10">
                 <a href="/">
                     <img class="h-10" src="/img/chipo-logo.svg" alt="Chipo" />
