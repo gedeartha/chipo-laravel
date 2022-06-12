@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminAdminsController;
+use App\Http\Controllers\AdminExportController;
 use App\Http\Controllers\AdminLoginController;
 use App\Http\Controllers\AdminLogoutController;
 use App\Http\Controllers\AdminOrderController;
@@ -39,6 +40,9 @@ Route::get('login', [UserAuthController::class, 'index'])->name('login.index');
 Route::post('login/store', [UserAuthController::class, 'store'])->name('login.store');
 Route::post('login/logout', [UserAuthController::class, 'logout'])->name('login.logout');
 Route::post('register/store', [UserAuthController::class, 'register'])->name('register.store');
+Route::post('forgot-password/store', [UserAuthController::class, 'forgotPassword'])->name('forgot-password.store');
+Route::post('reset-password/store', [UserAuthController::class, 'changePassword'])->name('reset-password.store');
+Route::get('account/reset-password/{token}', [UserAuthController::class, 'resetPassword'])->name('reset-password.index');
 Route::get('logout', [UserAuthController::class, 'navLogout'])->name('navLogout');
 
 Route::get('/dashboard', function () {
@@ -46,12 +50,17 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 Route::get('menu', [UserMenuController::class, 'index'])->name('menu');
+Route::get('topping', [UserMenuController::class, 'topping'])->name('topping');
 Route::post('menu/store', [UserMenuController::class, 'store'])->name('menu.store');
 Route::put('menu/update', [UserMenuController::class, 'update'])->name('menu.update');
 
 Route::get('checkout', [UserCheckout::class, 'index'])->name('checkout');
 Route::delete('checkout/delete/{id}', [UserCheckout::class, 'destroy'])->name('checkout.delete');
 Route::put('checkout/update', [UserCheckout::class, 'update'])->name('checkout.update');
+
+Route::get('invoice-order/{invoice}', [UserInvoiceController::class, 'index'])->name('invoice-order');
+Route::post('invoice-order/{invoice}', [UserInvoiceController::class, 'payment'])->name('invoice-order.payment');
+Route::get('invoice-order/{invoice}/update', [UserInvoiceController::class, 'update'])->name('invoice.update');
 
 Route::get('reservasi', [UserReservationController::class, 'index'])->name('reservasi');
 Route::post('reservasi-detail', [UserReservationController::class, 'detail'])->name('reservasi.detail');
@@ -62,13 +71,11 @@ Route::get('reservasi-checkout', [UserReservationCheckoutController::class, 'ind
 Route::get('reservasi-checkout/update', [UserReservationCheckoutController::class, 'update'])->name('reservasi.update');
 
 Route::get('invoice-reservation/{invoice}', [UserReservationInvoiceController::class, 'index'])->name('invoice.reservation');
+Route::post('invoice-reservation/{invoice}', [UserReservationInvoiceController::class, 'payment'])->name('invoice.reservation.payment');
 Route::put('invoice-reservation/{invoice}/update', [UserReservationInvoiceController::class, 'update'])->name('invoice.reservation.update');
 
 Route::get('history-order', [UserHistoryOrderController::class, 'index'])->name('history.index');
 Route::post('history-order', [UserHistoryOrderController::class, 'search'])->name('history.search');
-
-Route::get('invoice-order/{invoice}', [UserInvoiceController::class, 'index'])->name('invoice-order');
-Route::put('invoice-order/{invoice}/update', [UserInvoiceController::class, 'update'])->name('invoice.update');
 
 Route::get('history-reservation', [UserHistoryReservationController::class, 'index'])->name('history.reservation.index');
 Route::post('history-reservation', [UserHistoryReservationController::class, 'search'])->name('history.reservation.search');
@@ -100,10 +107,15 @@ Route::get('admin/topping/edit/{id}', [ToppingController::class, 'edit'])->name(
 Route::put('admin/topping/edit/{id}/update', [ToppingController::class, 'update'])->name('admin.topping.update');
 Route::delete('admin/topping/edit/{id}/delete', [ToppingController::class, 'destroy'])->name('admin.topping.destroy');
 
-Route::get('admin/menu-edit', [MenuController::class, 'index'])->name('admin.menu-edit');
-Route::put('admin/menu-edit/update', [MenuController::class, 'update'])->name('admin.menu-edit.update');
+Route::get('admin/menus', [MenuController::class, 'index'])->name('admin.menus.index');
+Route::get('admin/menus/add', [MenuController::class, 'add'])->name('admin.menus.add');
+Route::post('admin/menus/store', [MenuController::class, 'store'])->name('admin.menus.store');
+Route::get('admin/menus/edit/{id}', [MenuController::class, 'edit'])->name('admin.menus.edit');
+Route::put('admin/menus/edit/{id}/update', [MenuController::class, 'update'])->name('admin.menus.update');
+Route::delete('admin/menus/edit/{id}/delete', [MenuController::class, 'destroy'])->name('admin.menus.destroy');
 
 Route::get('/admin/history-order', [AdminOrderController::class, 'index'])->name('admin.history-order');
+Route::get('/admin/export/history-order', [AdminOrderController::class, 'export'])->name('admin.export.history-order');
 Route::get('/admin/detail-order/{invoice}', [AdminOrderController::class, 'detail'])->name('admin.detail-order');
 Route::put('/admin/detail-order/{invoice}/update', [AdminOrderController::class, 'update'])->name('admin.detail-order.update');
 
@@ -112,7 +124,11 @@ Route::get('/admin/table/{table}', [TableController::class, 'edit'])->name('admi
 Route::put('/admin/table/update', [TableController::class, 'update'])->name('admin.table.update');
 
 Route::get('/admin/history-reservation', [AdminReservationController::class, 'index'])->name('admin.history-reservation');
+Route::get('/admin/export/history-reservation', [AdminReservationController::class, 'export'])->name('admin.export.history-reservation');
 Route::get('/admin/detail-reservation/{invoice}', [AdminReservationController::class, 'detail'])->name('admin.detail-reservation');
 Route::put('/admin/detail-reservation/{invoice}/update', [AdminReservationController::class, 'update'])->name('admin.detail-reservation.update');
+
+Route::post('admin/export/history-order', [AdminExportController::class, 'order'])->name('admin.export.order.download');
+Route::post('admin/export/history-reservation', [AdminExportController::class, 'reservation'])->name('admin.export.reservation.download');
 
 require __DIR__.'/auth.php';

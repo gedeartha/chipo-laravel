@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
+use App\Models\PasswordReset;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UserAuthController extends Controller
 {
@@ -21,7 +22,7 @@ class UserAuthController extends Controller
             'password' => 'required',
         ]);
 
-        $email = $request->email . '@chipo.com';
+        $email = $request->email;
 
         $login = DB::table('users')
         ->where('email', $email)
@@ -60,7 +61,7 @@ class UserAuthController extends Controller
         ]);
         
         $emailCek = DB::table('users')
-            ->where('email', $request->email . '@chipo.com')
+            ->where('email', $request->email)
             ->count();
         
         if ($emailCek == 1) {
@@ -81,15 +82,107 @@ class UserAuthController extends Controller
         
         $post = User::create([
             'name' => $request->name,
-            'email' => $request->email . '@chipo.com',
+            'email' => $request->email,
             'password' => $request->password
         ]);
         
         if ($post) {
+            
+            $details = [
+                'name' => $request->name,
+            ];
+            
+            \Mail::to($request->email)->send(new \App\Mail\RegistrationMail($details));
+
             return redirect()
             ->route('login')
             ->with([
                 'success' => 'Pendaftaran akun berhasil!'
+            ]);
+        }
+    }
+
+    public function forgotPassword(Request $request)
+    {
+        $token = Str::random(60);
+
+        $emailCek = DB::table('users')
+            ->where('email', $request->email)
+            ->first();
+        
+        if ($emailCek) {
+            $post = PasswordReset::insert([
+                'email' => $request->email,
+                'token' => $token,
+                'created_at' => now()
+            ]);
+            
+            $details = [
+                'email' => $request->email,
+                'token' => $token,
+                'name' => $emailCek->name
+            ];
+            
+            \Mail::to($request->email)->send(new \App\Mail\ForgotPasswordMail($details));
+
+            return back()
+            ->with([
+                'success' => 'Reset password berhasil! Periksa email Anda.'
+            ]);
+
+        } else {
+            return back()
+            ->with([
+                'error' => 'Email tidak terdaftar!'
+            ]);
+
+        }
+        
+    }
+
+    public function resetPassword($token)
+    {        
+        $tokenCek = DB::table('password_resets')
+            ->where('token', $token)
+            ->first();
+                                
+        if ($tokenCek != null) {
+            $alert = true;
+            
+            $user = DB::table('users')
+            ->where('email', $tokenCek->email)
+            ->first();
+            
+            return view('account.reset-password', ['token' => $tokenCek, 'alert' => $alert, 'user_id' => $user->id]);
+        } else {
+            $alert = false;
+            
+            return view('account.reset-password', ['token' => $tokenCek, 'alert' => $alert]);
+        }
+    }
+
+    public function changePassword(Request $request)
+    {
+        // dd($request);
+        
+        if ($request->password == $request->password_confirmation) {
+            $update = DB::table('users')
+                ->where('id', $request->user_id)
+                ->update([
+                    'password' => $request->password,
+                    'updated_at' =>now()
+                ]);
+
+            return redirect()
+                ->route('login')
+                ->with([
+                    'success' => 'Password berhasil dirubah! Silahkan login.'
+                ]);
+                
+        } else {
+            return back()
+            ->with([
+                'error' => 'Konfirmasi Password Tidak Sesuai.'
             ]);
         }
     }

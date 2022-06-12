@@ -33,7 +33,7 @@ class UserCheckout extends Controller
             ->where('menu_id', $list_menus[0]->menu_id)
             ->get();
         
-        // dd($list_menus, $toppings);
+        // dd($list_menus);
 
         return view('checkout', ['order_menus' => $list_menus, 'toppings' => $toppings]);
     }

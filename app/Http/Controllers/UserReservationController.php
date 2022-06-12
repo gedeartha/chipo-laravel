@@ -67,6 +67,7 @@ class UserReservationController extends Controller
         
         Reservation::create([
             'invoice' => $invoice,
+            'midtrans_order_id' => null,
             'user_id' => session()->get('user_id'),
             'reservation_date' => $date,
             'reservation_time' => $request->time,

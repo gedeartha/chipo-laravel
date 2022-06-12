@@ -68,11 +68,26 @@
                                         {{ $date }} {{ $reservation->reservation_time }}</div>
                                 </div>
                             </div>
+
+                            @if ($reservation->status == 'Belum Dibayar')
+                                <div class="mt-4">
+                                    <button id="pay-button"
+                                        class="py-2.5 px-5 text-center text-sm font-bold text-white focus:outline-none shadow-lg bg-tertiary rounded-full hover:bg-gray-100 hover:text-blue-700 border hover:border-tertiary">
+                                        Bayar Sekarang
+                                    </button>
+                                </div>
+                            @endif
+
+                            <form action="" id="submit_form" method="POST">
+                                @csrf
+                                <input type="hidden" name="invoice" value="{{ $reservation->invoice }}">
+                                <input type="hidden" name="json" id="json_callback">
+                            </form>
                         </div>
                     </div>
                 </div>
 
-                <div class="text-center">
+                {{-- <div class="text-center">
 
                     <form action="{{ $reservation->invoice }}/update" method="POST" enctype="multipart/form-data">
                         @method('PUT')
@@ -136,11 +151,49 @@
                             </div>
                         </div>
                     </form>
-                </div>
+                </div> --}}
             </div>
 
         </div>
         {{-- Content --}}
 
     </div>
+
+    <script type="text/javascript">
+        // For example trigger on button clicked, or any time you need
+        var payButton = document.getElementById('pay-button');
+        payButton.addEventListener('click', function() {
+            // Trigger snap popup. @TODO: Replace TRANSACTION_TOKEN_HERE with your transaction token
+            window.snap.pay(`{{ $snap_token }}`, {
+                onSuccess: function(result) {
+                    /* You may add your own implementation here */
+                    // alert("payment success!");
+                    // console.log(result);
+                    send_response_to_form(result);
+                },
+                onPending: function(result) {
+                    /* You may add your own implementation here */
+                    // alert("wating your payment!");
+                    // console.log(result);
+                    send_response_to_form(result);
+                },
+                onError: function(result) {
+                    /* You may add your own implementation here */
+                    // alert("payment failed!");
+                    // console.log(result);
+                    send_response_to_form(result);
+                },
+                onClose: function() {
+                    /* You may add your own implementation here */
+                    alert('you closed the popup without finishing the payment');
+                }
+            })
+        });
+
+        function send_response_to_form(result) {
+            document.getElementById('json_callback').value = JSON.stringify(result);
+            // alert(document.getElementById('json_callback').value);
+            $('#submit_form').submit();
+        }
+    </script>
 </x-guest-layout>

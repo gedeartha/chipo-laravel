@@ -14,6 +14,7 @@ class Menu extends Model
         'description',
         'price',
         'image',
+        'status',
         'created_at',
         'updated_at',
     ];

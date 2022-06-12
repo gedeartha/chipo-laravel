@@ -14,23 +14,23 @@ class ReservationTableSeeder extends Seeder
      */
     public function run()
     {
-        ReservationTable::truncate();
+        // ReservationTable::truncate();
 
-        $reservationTable = [
-            [
-                'invoice' => '1001',
-                'table_id' => '11',
-                'reservation_date' => '2022-05-05',
-                'reservation_time' => '18:00',
-            ],
-            [
-                'invoice' => '1001',
-                'table_id' => '12',
-                'reservation_date' => '2022-05-05',
-                'reservation_time' => '18:00',
-            ],
-            ];
+        // $reservationTable = [
+        //     [
+        //         'invoice' => '1001',
+        //         'table_id' => '11',
+        //         'reservation_date' => '2022-05-05',
+        //         'reservation_time' => '18:00',
+        //     ],
+        //     [
+        //         'invoice' => '1001',
+        //         'table_id' => '12',
+        //         'reservation_date' => '2022-05-05',
+        //         'reservation_time' => '18:00',
+        //     ],
+        //     ];
         
-            ReservationTable::insert($reservationTable);
+        //     ReservationTable::insert($reservationTable);
     }
 }

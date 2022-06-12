@@ -14,22 +14,22 @@ class OrderSeeder extends Seeder
      */
     public function run()
     {
-        Order::truncate();
+        // Order::truncate();
 
-        $orders = [
-                [
-                    'invoice' => '1001',
-                    'user_id' => '1',
-                    'table' => '12',
-                    'status' => 'Pending',
-                    'total' => '42000',
-                    'payment' => '-',
-                    'proof' => '-',
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ],
-            ];
+        // $orders = [
+        //         [
+        //             'invoice' => '1001',
+        //             'user_id' => '1',
+        //             'table' => '12',
+        //             'status' => 'Pending',
+        //             'total' => '42000',
+        //             'payment' => '-',
+        //             'proof' => '-',
+        //             'created_at' => now(),
+        //             'updated_at' => now(),
+        //         ],
+        //     ];
         
-        Order::insert($orders);
+        // Order::insert($orders);
     }
 }

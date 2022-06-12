@@ -19,7 +19,7 @@
 
             <div class="mt-2 bg-white shadow-lg rounded-xl p-4">
                 <div>Dipesan oleh:</div>
-                <div class="font-bold text-base">{{ session()->get('user_name') }}</div>
+                <div class="font-bold text-base">{{ session()->get('name') }}</div>
             </div>
 
             <div class="my-5 text-base font-bold text-primary">Detail Pesanan</div>
@@ -35,6 +35,10 @@
                 @forelse ($order_menus as $order_menu)
                     @php
                         $total_menu = $total_menu + $order_menu->menu_price;
+                        
+                        $menu = DB::table('menus')
+                            ->where('id', $order_menu->menu)
+                            ->first();
                     @endphp
                     <div>
                         <div class="text-sm font-bold text-primary p-2">Pesanan {{ $index }}</div>
@@ -42,11 +46,11 @@
 
                         <div class="flex items-center space-x-3 p-2 border-b border-b-gray-300">
                             <div class="flex-none w-14">
-                                <img class="h-full w-full rounded-full" src="/img/menu-bubur-ayam.png"
-                                    alt="Bubur Ayam" />
+                                <img class="h-14 w-14 object-cover rounded-full"
+                                    src="{{ Storage::url('upload/') . $menu->image }}" alt="Bubur Ayam" />
                             </div>
                             <div class="flex-auto">
-                                <div class="font-bold text-md text-primary">{{ $order_menu->menu }}</div>
+                                <div class="font-bold text-md text-primary">{{ $menu->name }}</div>
                                 <div class="font-semibold text-base text-gray-500">Rp
                                     {{ number_format($order_menu->menu_price, 0, ',', '.') }}</div>
                             </div>

@@ -13,6 +13,7 @@ class Order extends Model
         'created_at',
         'updated_at',
         'invoice',
+        'midtrans_order_id',
         'user_id',
         'table',
         'status',

@@ -17,7 +17,7 @@ class CreateOrderMenusTable extends Migration
             $table->id();
             $table->integer('invoice');
             $table->integer('menu_id')->unsigned();
-            $table->string('menu');
+            $table->integer('menu');
             $table->bigInteger('menu_price');
         });
     }

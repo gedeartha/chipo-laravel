@@ -52,4 +52,9 @@ class AdminReservationController extends Controller
             ]);
         } 
     }
+    
+    public function export()
+    {
+        return view('admin.export.history-reservation');
+    }
 }

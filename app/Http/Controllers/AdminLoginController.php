@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OrdersExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminLoginController extends Controller
 {
     public function index()
-    {        
+    {
         return view('admin.login');
     }
 

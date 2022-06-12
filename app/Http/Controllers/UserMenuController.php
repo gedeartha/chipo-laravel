@@ -58,12 +58,23 @@ class UserMenuController extends Controller
                 'invoice' => $invoiceValue->invoice,
             ]);
         }
-        
-        // dd(session()->all());
 
-        $menu = DB::table('menus')->where('id', 1)->first();
-        $toppings = DB::table('toppings')->where('status', 'Tersedia')->get();
-        return view('menu', ['menu' => $menu, 'toppings' => $toppings]);
+        $menus = DB::table('menus')->where('status', 'Tersedia')->get();
+        
+        return view('menu', ['menus' => $menus]);
+    }
+
+    public function topping(Request $request)
+    {
+        $menu = DB::table('menus')
+            ->where('id', $request->menu)
+            ->first();
+
+        $toppings = DB::table('toppings')
+            ->where('status', 'Tersedia')
+            ->get();
+
+        return view('topping', ['menu' => $menu, 'toppings' => $toppings]);
     }
 
     public function store(Request $request)
@@ -113,7 +124,7 @@ class UserMenuController extends Controller
         OrderMenu::insert([
             'invoice' => $invoice,
             'menu_id' => $menu_id,
-            'menu' => 'Bubur Ayam',
+            'menu' => $request->bubur_id,
             'menu_price' => $menu_price,
         ]);
 
@@ -156,11 +167,11 @@ class UserMenuController extends Controller
         }
 
         $total = $menu_price + $total_topping;
-        
+
         OrderMenu::insert([
             'invoice' => $invoice,
             'menu_id' => $menu_id,
-            'menu' => 'Bubur Ayam',
+            'menu' => $request->bubur_id,
             'menu_price' => $menu_price,
         ]);
 

@@ -91,7 +91,7 @@
                             </div>
                         </div>
 
-                        <div class="flex flex-col">
+                        {{-- <div class="flex flex-col">
                             <div class="mb-1">Bukti Pembayaran</div>
                             <div class="font-bold text-base">
                                 <a href="{{ Storage::url('proof/') . $order->proof }}"
@@ -105,7 +105,7 @@
                                     </div>
                                 </a>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -140,7 +140,12 @@
                                 <tr
                                     class="border-b odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {{ $orderMenu->menu }}
+                                        @php
+                                            $menu = DB::table('menus')
+                                                ->where('id', $orderMenu->menu)
+                                                ->first();
+                                        @endphp
+                                        {{ $menu->name }}
                                     </th>
                                     <td class="px-6 py-4 text-center">
                                         {{-- Harga Menu --}}

@@ -17,6 +17,7 @@ class CreateReservationsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->integer('invoice')->unsigned();
+            $table->integer('midtrans_order_id')->nullable();
             $table->integer('user_id');
             $table->date('reservation_date');
             $table->string('reservation_time');

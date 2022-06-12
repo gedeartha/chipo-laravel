@@ -1,36 +1,56 @@
 <x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
-
-        <div class="mb-4 text-sm text-gray-600">
-            {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+    <div class="grid grid-cols-1 lg:grid-cols-2 lg:gap-4">
+        <div class="hidden lg:block relative h-screen p-5">
+            <img class="w-full h-full rounded-xl" src="/img/forgot-password-image.png" alt="Chipo" />
         </div>
-
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
-
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
-        <form method="POST" action="{{ route('password.email') }}">
-            @csrf
-
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
-
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+        <div class="flex flex-col items-center justify-center h-screen mx-auto">
+            <div class="mb-10">
+                <a href="/">
+                    <img class="h-10" src="/img/chipo-logo.svg" alt="Chipo" />
+                </a>
+            </div>
+            <div class="text-center mb-5">
+                <div class="text-2xl font-bold text-primary mb-2">Lupa Password</div>
+                <div class="text-gray-400">Masukkan email Anda yang telah terdaftar</div>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ __('Email Password Reset Link') }}
-                </x-button>
+            <div class="mb-3">
+
+                @if (session('success'))
+                    <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                        role="alert">
+                        <span class="font-medium">Success!</span> {{ session('success') }}
+                    </div>
+                @endif
+
+                @if (session('error'))
+                    <div class="p-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded-lg dark:bg-yellow-200 dark:text-yellow-800"
+                        role="alert">
+                        <span class="font-medium">Gagal!</span> {{ session('error') }}
+                    </div>
+                @endif
             </div>
-        </form>
-    </x-auth-card>
+
+            <form method="POST" action="{{ route('forgot-password.store') }}">
+                @csrf
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <x-label for="email" value="Email" />
+                    <x-input id="email" class="block mt-1 w-96 lowercase" type="email" name="email" required
+                        autofocus />
+                </div>
+
+                <div class="flex items-center justify-end mt-5">
+                    <x-button>
+                        Submit
+                    </x-button>
+                </div>
+            </form>
+
+            <div class="mt-16">
+                Tidak punya Akun? <a href="/register" class="text-blue-600">Buat sekarang</a>
+            </div>
+        </div>
+    </div>
 </x-guest-layout>

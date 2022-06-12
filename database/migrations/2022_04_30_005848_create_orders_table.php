@@ -17,6 +17,7 @@ class CreateOrdersTable extends Migration
             $table->id();
             $table->timestamps();
             $table->integer('invoice');
+            $table->integer('midtrans_order_id')->nullable();
             $table->integer('user_id');
             $table->integer('table');
             $table->string('status');

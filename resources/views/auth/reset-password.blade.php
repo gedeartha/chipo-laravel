@@ -1,48 +1,57 @@
 <x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+    <div class="h-screen w-screen flex justify-center items-center bg-secondary">
+        <div class="shadow-md bg-white rounded-xl p-5">
+            <div class="flex flex-col items-center justify-center">
+                <div class="mb-2">
+                    <a href="/">
+                        <img class="h-10" src="/img/chipo-logo.svg" alt="Chipo" />
+                    </a>
+                </div>
+                <div class="text-center mb-3">
+                    <div class="text-2xl font-bold text-primary mb-2">Reset Password</div>
+                </div>
 
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+                @if (!$token)
+                    <div class="mb-2">
+                        <div class="py-4 px-20 text-sm text-yellow-700 bg-yellow-100 rounded-lg dark:bg-yellow-200 dark:text-yellow-800"
+                            role="alert">
+                            <span class="font-medium">Error!</span> Tautan tidak valid.
+                        </div>
+                    </div>
+                @else
+                    <div class="mb-2">
+                        <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
+                            role="alert">
+                            <span class="font-medium">Success!</span> Silahkan ganti password Anda
+                        </div>
+                    </div>
 
-        <form method="POST" action="{{ route('password.update') }}">
-            @csrf
+                    <form method="POST" action="{{ route('admin.login.store') }}">
+                        @csrf
 
-            <!-- Password Reset Token -->
-            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <x-label for="password" value="Password" />
+                            <x-input id="password" class="block mt-1 w-96" type="password" name="password" required
+                                autofocus />
+                        </div>
 
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
+                        <!-- Password Confirmation -->
+                        <div class="mb-3">
+                            <x-label for="password_confirmation" value="Konfirmasi Password" />
+                            <x-input id="password_confirmation" class="block mt-1 w-96" type="password"
+                                name="password_confirmation" required autofocus />
+                        </div>
 
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus />
+                        <div class="flex items-center justify-end mt-5">
+                            <x-button>
+                                Reset Password
+                            </x-button>
+                        </div>
+                    </form>
+                @endif
+
             </div>
-
-            <!-- Password -->
-            <div class="mt-4">
-                <x-label for="password" :value="__('Password')" />
-
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required />
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="mt-4">
-                <x-label for="password_confirmation" :value="__('Confirm Password')" />
-
-                <x-input id="password_confirmation" class="block mt-1 w-full"
-                                    type="password"
-                                    name="password_confirmation" required />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ __('Reset Password') }}
-                </x-button>
-            </div>
-        </form>
-    </x-auth-card>
+        </div>
+    </div>
 </x-guest-layout>

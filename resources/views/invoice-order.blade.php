@@ -54,11 +54,6 @@
                                 <div class="w-full flex justify-between items-center">
                                     <div class="text-base">Dipesan oleh</div>
                                     <div class="text-base font-bold text-primary">
-                                        @php
-                                            $user = DB::table('users')
-                                                ->where('id', $order->user_id)
-                                                ->first();
-                                        @endphp
                                         {{ $user->name }}
                                     </div>
                                 </div>
@@ -91,15 +86,19 @@
                                 <tbody>
 
                                     @forelse ($orderMenus as $orderMenu)
+                                        @php
+                                            $menu = DB::table('menus')
+                                                ->where('id', $orderMenu->menu)
+                                                ->first();
+                                        @endphp
                                         <tr
                                             class="border-b odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
                                             <th scope="row"
                                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                {{ $orderMenu->menu }}
+                                                {{ $menu->name }}
                                             </th>
                                             <td class="px-6 py-4 text-center">
                                                 @php
-                                                    
                                                     $toppings = DB::table('order_items')
                                                         ->where('menu_id', $orderMenu->menu_id)
                                                         // ->pluck('topping');
@@ -130,11 +129,9 @@
                     </div>
                 </div>
 
-                <div class="text-center">
+                @if ($order->status != 'Sudah Dibayar')
+                    <div class="text-center">
 
-                    <form action="{{ $order->invoice }}/update" method="POST" enctype="multipart/form-data">
-                        @method('PUT')
-                        @csrf
                         <div class="flex justify-center items-center mt-20">
                             <div class="w-96 rounded-xl border-2 border-gray-300 shadow-md pb-5 px-4">
                                 <div class="text-lg font-bold text-primary mt-4 mb-4">Pembayaran</div>
@@ -142,9 +139,7 @@
                                 <div class="p-4 mb-4 text-sm text-green-700 bg-green-100 rounded-lg dark:bg-green-200 dark:text-green-800"
                                     role="alert">
                                     @php
-                                        if ($order->status == 'Sudah Dibayar') {
-                                            echo 'Bukti transfer berhasil diupload';
-                                        } elseif ($order->status == 'Cash') {
+                                        if ($order->status == 'Cash') {
                                             echo 'Sistem pembayaran cash terpilih';
                                         } else {
                                             echo 'Mohon memilih metode pembayaran';
@@ -160,62 +155,83 @@
                                 @endif
 
                                 @if ($order->status !== 'Sudah Dibayar')
-                                    <div class="text-base text-gray-500 mt-4">
-                                        Silahkan transfer ke nomor Rekening dibawah ini
-                                    </div>
-                                @endif
+                                    <div class="border-t-2 pt-4">
 
-                                <div class="text-base font-bold text-primary my-2">
-                                    Bank Central Asia
-                                </div>
-                                <div class="text-lg">
-                                    8831928442
-                                </div>
-                                <div class="text-xl font-bold text-primary my-2">
-                                    Koko Celamitan
-                                </div>
-                                <div class="text-3xl font-bold text-primary my-4">
-                                    Rp {{ number_format($order->total, 0, ',', '.') }}
-                                </div>
+                                        <div class="flex justify-between items-center">
+                                            <div class="ml-5">
+                                                <a
+                                                    href="{{ $order->invoice }}/update?invoice={{ $order->invoice }}">
+                                                    <x-button>
+                                                        Cash
+                                                    </x-button>
+                                                </a>
+                                            </div>
 
-                                @if ($order->status !== 'Sudah Dibayar')
-                                    <div class="border-t-2 py-4">
-                                        <x-label for="payment" value="Pilih Metode Pembayaran" class="mb-4" />
-                                        <select id="payment" name="payment"
-                                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                                            required autofocus>
-                                            @if ($order->payment == '-')
-                                                <option value="">Pilih metode pembayaran</option>
-                                                <option value="Transfer">Transfer</option>
-                                                <option value="Cash">Cash</option>
+                                            @if ($order->status != 'Sudah Dibayar')
+                                                <div class="mr-5">
+                                                    <button id="pay-button"
+                                                        class="py-2.5 px-5 text-center text-sm font-bold text-white focus:outline-none shadow-lg bg-tertiary rounded-full hover:bg-gray-100 hover:text-blue-700 border hover:border-tertiary">
+                                                        Bayar Sekarang
+                                                    </button>
+                                                </div>
                                             @endif
-                                        </select>
-                                        <div class="text-xs my-4">
-                                            Mohon upload bukti transfer jika Anda memilih <br /><b>Metode Pembayaran
-                                                Transfer</b>
                                         </div>
 
-                                        <input
-                                            class="block mt-2 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer focus:outline-none focus:border-transparent"
-                                            id="image" type="file" name="image">
-
-                                        <div class="mt-5">
-                                            <x-button>
-                                                Submit
-                                            </x-button>
-                                        </div>
+                                        <form action="" id="submit_form" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="invoice" value="{{ $order->invoice }}">
+                                            <input type="hidden" name="json" id="json_callback">
+                                        </form>
                                     </div>
                                 @endif
 
 
                             </div>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                @endif
             </div>
 
         </div>
         {{-- Content --}}
 
     </div>
+
+    <script type="text/javascript">
+        // For example trigger on button clicked, or any time you need
+        var payButton = document.getElementById('pay-button');
+        payButton.addEventListener('click', function() {
+            // Trigger snap popup. @TODO: Replace TRANSACTION_TOKEN_HERE with your transaction token
+            window.snap.pay(`{{ $snap_token }}`, {
+                onSuccess: function(result) {
+                    /* You may add your own implementation here */
+                    // alert("payment success!");
+                    // console.log(result);
+                    send_response_to_form(result);
+                },
+                onPending: function(result) {
+                    /* You may add your own implementation here */
+                    // alert("wating your payment!");
+                    // console.log(result);
+                    send_response_to_form(result);
+                },
+                onError: function(result) {
+                    /* You may add your own implementation here */
+                    // alert("payment failed!");
+                    // console.log(result);
+                    send_response_to_form(result);
+                },
+                onClose: function() {
+                    /* You may add your own implementation here */
+                    alert('you closed the popup without finishing the payment');
+                }
+            })
+        });
+
+        function send_response_to_form(result) {
+            document.getElementById('json_callback').value = JSON.stringify(result);
+            // alert(document.getElementById('json_callback').value);
+            $('#submit_form').submit();
+        }
+    </script>
 </x-guest-layout>

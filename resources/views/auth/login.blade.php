@@ -36,16 +36,9 @@
 
                 <!-- Email -->
                 <div class="mb-3">
-                    <label for="website-admin"
-                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Email</label>
-                    <div class="flex">
-                        <input type="text" id="email" name="email"
-                            class="rounded-none lowercase rounded-l-lg bg-gray-50 border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5">
-                        <span
-                            class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-200 rounded-r-md border border-l-0 border-gray-300">
-                            @chipo.com
-                        </span>
-                    </div>
+                    <x-label for="email" value="Email" />
+                    <x-input id="email" class="block mt-1 w-96 lowercase" type="email" name="email" required
+                        autofocus />
                 </div>
 
                 <!-- Password -->
@@ -54,7 +47,10 @@
                     <x-input id="password" class="block mt-1 w-96" type="password" name="password" required autofocus />
                 </div>
 
-                <div class="flex items-center justify-end mt-5">
+                <div class="flex items-center justify-between mt-5">
+                    <div>
+                        <a href="/forgot-password" class="text-blue-600">Lupa Password?</a>
+                    </div>
                     <x-button>
                         Masuk
                     </x-button>

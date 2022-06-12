@@ -5,7 +5,25 @@
 
         {{-- Content --}}
         <div class="col-span-8 sm:col-span-9 lg:col-span-10 p-10">
-            <div class="font-extrabold text-3xl text-primary mb-4">Riwayat Reservasi</div>
+            <div class="flex justify-between">
+                <div class="font-extrabold text-3xl text-primary mb-4">Riwayat Reservasi</div>
+
+                <a href="{{ route('admin.export.history-reservation') }}">
+                    <x-button-small>
+                        <div class="flex justify-center items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-5 w-5" fill="none"
+                                viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                            </svg>
+                            <div class="ml-1 mr-2">
+                                Export
+                            </div>
+                        </div>
+                    </x-button-small>
+                </a>
+            </div>
+
             <hr class="mb-4" />
 
 

@@ -20,6 +20,7 @@ class CreateMenusTable extends Migration
             $table->text('description');
             $table->bigInteger('price');
             $table->string('image');
+            $table->string('status');
         });
     }
 
