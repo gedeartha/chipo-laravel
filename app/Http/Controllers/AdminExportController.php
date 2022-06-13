@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\OrdersExport;
+use App\Exports\ReservationsExport;
 use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -37,6 +38,6 @@ class AdminExportController extends Controller
             'date_end' => $date_end,
         ]);
 
-        return Excel::download(new OrdersExport, 'history-reservasi.xlsx');
+        return Excel::download(new ReservationsExport, 'history-reservasi.xlsx');
     }
 }
