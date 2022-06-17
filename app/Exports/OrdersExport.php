@@ -2,26 +2,50 @@
 
 namespace App\Exports;
 
-use App\Models\Order;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Request;
-use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\FromArray;
 
-class OrdersExport implements FromCollection
+class OrdersExport implements FromArray
 {
     /**
     * @return \Illuminate\Support\Collection
     */
-    public function collection()
+    public function array(): array
     {
         $date_start = session()->get('date_start');
         $date_end = session()->get('date_end');
 
-        $export = DB::Table('orders')
+        $orders = DB::Table('orders')
             ->where('created_at', '>=', $date_start)
             ->where('created_at', '<', $date_end)
+            ->where('status', '!=', 'Pending')
             ->get();
+            
+        $download = [];
+        foreach ($orders as $order) {
+            $order = DB::Table('orders')
+                ->where('id', $order->id)
+                ->first();
+                    
+            $user = DB::Table('users')
+                ->where('id', $order->user_id)
+                ->first();
+                
+            $order_menus = DB::Table('order_menus')
+                ->where('invoice', $order->invoice)
+                ->count();
 
-        return $export;
+            $download[] = [
+                'created_at' => $order->created_at,
+                'invoice' =>  $order->invoice,
+                'user' => $user->name,
+                'table' => $order->table,
+                'jumlah' => $order_menus,
+                'total' => $order->total,
+                'status' => $order->status,
+            ];
+        }
+        
+        return $download;
     }
 }

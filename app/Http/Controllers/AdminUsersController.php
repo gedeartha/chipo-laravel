@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\Order;
+use App\Models\OrderTopping;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,6 @@ class AdminUsersController extends Controller
         $users = User::latest()->get();
 
         return view('admin.users.index', ['users' => $users]);
-
     }
     
     public function add()
@@ -33,8 +33,6 @@ class AdminUsersController extends Controller
             ->get();
         
         return view('admin.users.add', ['tables' => $tables]);
-        
-
     }
     
     public function store(Request $request)
@@ -81,6 +79,15 @@ class AdminUsersController extends Controller
                 'total' => 0,
                 'payment' => '-',
                 'proof' => '-',
+            ]);
+            
+            OrderTopping::create([
+                'invoice' => $invoice,
+                'user_id' => $user->id,
+                'table' => $request->table,
+                'status' => 'Pending',
+                'total' => 0,
+                'payment' => '-',
             ]);
                 
             if ($post) {
@@ -155,12 +162,21 @@ class AdminUsersController extends Controller
                     'payment' => '-',
                     'proof' => '-',
                 ]);
+            
+                OrderTopping::create([
+                    'invoice' => $invoice,
+                    'user_id' => $id,
+                    'table' => $request->table,
+                    'status' => 'Pending',
+                    'total' => 0,
+                    'payment' => '-',
+                ]);
                 
                 $updateUser = DB::table('users')
                 ->where('id', $id)
                 ->update([
                     'name' => $request->name,
-                    'email' => $request->email . '@chipo.com',
+                    'email' => $request->email,
                     'updated_at' =>now()
                 ]);
                 

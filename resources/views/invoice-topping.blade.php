@@ -8,7 +8,7 @@
 
             <div class="text-center">
                 <div class="text-2xl font-bold text-primary mb-4">Bubur Ayam Koko Celamitan</div>
-                <div class="text-lg font-bold text-primary">Invoice Pesanan Topping</div>
+                <div class="text-lg font-bold text-primary">Invoice Pesanan</div>
             </div>
 
             <div class="flex space-x-10 justify-center">
@@ -76,41 +76,31 @@
                                 <thead class="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3">
-                                            Menu
+                                            Pesanan Topping
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-center">
-                                            Topping
+                                            Jumlah
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody>
 
-                                    @forelse ($orderMenus as $orderMenu)
+                                    @forelse ($order_items as $order_item)
                                         @php
-                                            $menu = DB::table('menus')
-                                                ->where('id', $orderMenu->menu)
+                                            $topping = DB::table('toppings')
+                                                ->where('id', $order_item->topping)
                                                 ->first();
                                         @endphp
                                         <tr
                                             class="border-b odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
                                             <th scope="row"
                                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                {{ $menu->name }}
+                                                {{ $topping->name }}
                                             </th>
                                             <td class="px-6 py-4 text-center">
-                                                @php
-                                                    $toppings = DB::table('order_items')
-                                                        ->where('menu_id', $orderMenu->menu_id)
-                                                        // ->pluck('topping');
-                                                        ->get();
-                                                @endphp
-
-                                                @foreach ($toppings as $topping)
-                                                    {{ $topping->topping }},
-                                                @endforeach
+                                                {{ $order_item->qty }}
                                             </td>
                                         </tr>
-
                                     @empty
                                         <tr
                                             class="border-b odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">

@@ -87,7 +87,7 @@ class UserMenuController extends Controller
         $menu_id = random_int(1, 9999);
         $sum_topping = Topping::count();
         
-        $menu_price =$request->input('menu_price');
+        $menu_price = $request->input('menu_price');
 
         $name = $request->input('name', []);
         $toggle = $request->input('toggleValue', []);

@@ -18,6 +18,7 @@ module.exports = {
                 tertiary: "#2760F3",
                 quaternary: "#6FC2F9",
                 blueLight: "#5CBEFF",
+                blueLightTwo: "#00A4FF",
             },
         },
     },

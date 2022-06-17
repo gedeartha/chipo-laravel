@@ -13,7 +13,9 @@ class AdminReservationController extends Controller
         if (session()->get('login') == null) {
             return view('admin.login');
         } else {
-            $reservations = Reservation::latest()->get();
+            $reservations = DB::table('reservations')
+                ->where('status', '!=', 'Pending')
+                ->get();
             return view('admin.history-reservation', ['reservations' => $reservations]);
         }
     }
@@ -53,8 +55,41 @@ class AdminReservationController extends Controller
         } 
     }
     
-    public function export()
-    {
-        return view('admin.export.history-reservation');
+    public function export(Request $request)
+    {        
+        if (isset($request->date_start) && isset($request->date_end)) {
+            $req_date_start = str_replace('/', '-', $request->date_start);
+            $req_date_end = str_replace('/', '-', $request->date_end);
+            
+            $date_start = date("Y-m-d", strtotime($req_date_start));
+            $date_end = date("Y-m-d", strtotime($req_date_end));
+            
+            session([
+                'date_start' => $date_start,
+                'date_end' => $date_end,
+            ]);
+
+            $reservations = DB::Table('reservations')
+                ->where('created_at', '>=', $date_start)
+                ->where('created_at', '<', $date_end)
+                ->where('status', '!=', 'Pending')
+                ->get();
+        } else {
+            $req_date_start = '';
+            $req_date_end = '';
+            
+            session([
+                'date_start' => $req_date_start,
+                'date_end' => $req_date_end,
+            ]);
+            
+            $reservations = DB::table('reservations')
+                ->where('created_at', '>=', $req_date_start)
+                ->where('created_at', '<', $req_date_end)
+                ->where('status', '!=', 'Pending')
+                ->get();
+        }
+        
+        return view('admin.export.history-reservation', ['reservations' => $reservations, 'date_start' => $req_date_start, 'date_end' => $req_date_end]);
     }
 }

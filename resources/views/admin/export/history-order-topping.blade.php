@@ -6,7 +6,7 @@
         {{-- Content --}}
         <div class="col-span-8 sm:col-span-9 lg:col-span-10 p-10">
 
-            <div class="font-extrabold text-3xl text-primary mb-4">Export Riwayat Reservasi</div>
+            <div class="font-extrabold text-3xl text-primary mb-4">Export Riwayat Order Topping</div>
             <hr class="mb-4" />
 
             <div class="grid grid-cols-12 gap-x-5">
@@ -88,7 +88,7 @@
                     @endif
 
                     <div class="text-right">
-                        <a href="{{ route('admin.export.reservation.download') }}">
+                        <a href="{{ route('admin.export.order-topping.download') }}">
                             <x-button-small>
                                 <div class="flex justify-center items-center">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-5 w-5" fill="none"
@@ -103,7 +103,6 @@
                             </x-button-small>
                         </a>
                     </div>
-
 
                     <div class="h-[75vh]">
                         <div class="mt-5 relative overflow-x-auto rounded-lg shadow-lg">
@@ -120,7 +119,7 @@
                                             Dipesan oleh
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-center">
-                                            Tanggal Reservasi
+                                            No. Meja
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-center">
                                             Jumlah Pesanan
@@ -132,45 +131,37 @@
                                 </thead>
                                 <tbody>
 
-                                    @forelse ($reservations as $reservation)
+                                    @forelse ($orders as $order)
                                         <tr
                                             class="border-b odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
                                             <th scope="row"
                                                 class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                                #R{{ $reservation->invoice }}
+                                                #{{ $order->invoice }}
                                             </th>
                                             <td class="px-6 py-4 text-center">
-                                                @php
-                                                    $dateGet = $reservation->created_at;
-                                                    $date = date('d M Y H:i', strtotime($dateGet));
-                                                @endphp
-                                                {{ $date }}
+                                                {{ $order->created_at }}
                                             </td>
                                             <td class="px-6 py-4 text-center">
                                                 @php
                                                     $user = DB::table('users')
-                                                        ->where('id', $reservation->user_id)
+                                                        ->where('id', $order->user_id)
                                                         ->first();
                                                 @endphp
                                                 {{ $user->name }}
                                             </td>
                                             <td class="text-center">
-                                                @php
-                                                    $dateGet = $reservation->reservation_date;
-                                                    $date = date('d M Y', strtotime($dateGet));
-                                                @endphp
-                                                {{ $date }} {{ $reservation->reservation_time }}
+                                                {{ $order->table }}
                                             </td>
                                             <td class="text-center">
                                                 @php
-                                                    $reservationCount = DB::table('reservation_tables')
-                                                        ->where('invoice', $reservation->invoice)
+                                                    $orderCount = DB::table('order_topping_items')
+                                                        ->where('invoice', $order->invoice)
                                                         ->count();
                                                 @endphp
-                                                {{ $reservationCount }}
+                                                {{ $orderCount }}
                                             </td>
                                             <td class="text-center">
-                                                {{ $reservation->status }}
+                                                {{ $order->status }}
                                             </td>
                                         </tr>
 
@@ -180,19 +171,16 @@
                                             <th colspan="7" scope="row"
                                                 class="px-6 py-4 font-medium whitespace-nowrap text-center">
                                                 <div class="my-6 text-gray-400">
-                                                    Riwayat reservasi kosong
+                                                    Riwayat pesanan kosong
                                                 </div>
                                             </th>
                                         </tr>
                                     @endforelse
-
                                 </tbody>
                             </table>
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
         {{-- Content --}}

@@ -6,7 +6,7 @@ use App\Models\Midtrans;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
-class UserInvoiceController extends Controller
+class UserInvoiceToppingController extends Controller
 {
     public function index($invoice)
     {
@@ -14,16 +14,22 @@ class UserInvoiceController extends Controller
             return view('auth.login');
         }
         
-        $order = DB::table('orders')->where('invoice', $invoice)->first();
-        $orderMenu = DB::table('order_menus')->where('invoice', $invoice)->first();
-        $orderMenus = DB::table('order_menus')->where('invoice', $invoice)->get();
+        $order = DB::table('order_toppings')
+            ->where('invoice', $invoice)
+            ->first();
 
         $user = DB::table('users')
             ->where('id', $order->user_id)
             ->first();
-
-        $orderItemsCount = DB::table('order_items')->where('menu_id', $orderMenu->menu_id)->count();
         
+        $orderItems = DB::table('order_topping_items')
+            ->where('invoice', $invoice)
+            ->get();
+            
+        $orderItemsCount = DB::table('order_topping_items')
+            ->where('invoice', $order->invoice)
+            ->count();
+
         // Set your Merchant Server Key
         \Midtrans\Config::$serverKey = 'SB-Mid-server-IK-LC0zAW-djydF887uRncFK';
         // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
@@ -34,7 +40,7 @@ class UserInvoiceController extends Controller
         \Midtrans\Config::$is3ds = true;
         
         $curl = curl_init();
-
+        
         if ($order->status == 'Belum Dibayar' && $order->midtrans_order_id != null) {
             $AUTH_STRING = base64_encode("SB-Mid-server-IK-LC0zAW-djydF887uRncFK:");
     
@@ -70,14 +76,15 @@ class UserInvoiceController extends Controller
 
             if ($json->payment_type == 'bank_transfer' && $json->transaction_status == 'settlement') {
 
-                $update = DB::table('orders')->where('invoice', $invoice)
-                ->update([
-                    'status' => 'Sudah Dibayar',
+                $update = DB::table('orders')
+                    ->where('invoice', $invoice)
+                    ->update([
+                        'status' => 'Sudah Dibayar',
                 ]);
             }
 
         }
-
+        
         $midtrans_order_id = rand(1000, 9999999);
             
         $params = array(
@@ -95,24 +102,26 @@ class UserInvoiceController extends Controller
             
         $snapToken = \Midtrans\Snap::getSnapToken($params);
         
-        return view('invoice-order', [
+        return view('invoice-topping', [
             'user' => $user,
             'order' => $order, 
-            'orderMenus' => $orderMenus,
+            'order_items' => $orderItems,
             'quantity' => $orderItemsCount,
             'snap_token' => $snapToken
         ]);
-        
     }
 
     public function update(Request $request)
     {
-        $update = DB::table('orders')->where('invoice', $request->get('invoice'))->update([
-            'status' => 'Cash',
-            'updated_at' =>now()]);
+        $update = DB::table('order_toppings')
+            ->where('invoice', $request->get('invoice'))
+            ->update([
+                'status' => 'Cash',
+                'updated_at' =>now()
+        ]);
 
         return redirect()
-            ->route('invoice-order', $request->get('invoice'))
+            ->route('invoice-topping', $request->get('invoice'))
             ->with([
                 'successInvoice' => 'Berhasil memilih pembayaran cash'
         ]);
@@ -138,7 +147,8 @@ class UserInvoiceController extends Controller
             'transaction_status' => $transaction_status,
         ]);
 
-        $update = DB::table('orders')->where('invoice', $request->invoice)
+        $update = DB::table('order_toppings')
+                ->where('invoice', $request->invoice)
                 ->update([
                     'midtrans_order_id' => $order_id,
                     'status' => $status,
@@ -147,6 +157,6 @@ class UserInvoiceController extends Controller
         // return $json;
 
         return redirect()
-        ->route('invoice-order', $request->invoice);
+        ->route('invoice-topping', $request->invoice);
     }
 }

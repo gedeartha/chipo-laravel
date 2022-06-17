@@ -6,9 +6,9 @@
         {{-- Content --}}
         <div class="col-span-8 sm:col-span-9 lg:col-span-10 p-10">
             <div class="flex justify-between">
-                <div class="font-extrabold text-3xl text-primary mb-4">Riwayat Pesanan Menu</div>
+                <div class="font-extrabold text-3xl text-primary mb-4">Riwayat Pesanan Topping</div>
 
-                <a href="{{ route('admin.export.history-order') }}">
+                <a href="{{ route('admin.export.history-order-topping') }}">
                     <x-button-small>
                         <div class="flex justify-center items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" class="ml-1 h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -89,7 +89,7 @@
                                         {{ $order->status }}
                                     </td>
                                     <td class="text-center">
-                                        <a href="{{ route('admin.detail-order', $order->invoice) }}">
+                                        <a href="{{ route('admin.detail-history-order-topping', $order->invoice) }}">
                                             <button
                                                 class="py-1.5 px-2.5 text-center text-sm font-semibold text-blue-700 rounded-lg border border-blue-700">Detail</button>
                                         </a>

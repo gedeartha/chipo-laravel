@@ -5,7 +5,7 @@ namespace App\Exports;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromArray;
 
-class ReservationsExport implements FromArray
+class OrderToppingsExport implements FromArray
 {
     /**
     * @return \Illuminate\Support\Collection
@@ -15,7 +15,7 @@ class ReservationsExport implements FromArray
         $date_start = session()->get('date_start');
         $date_end = session()->get('date_end');
 
-        $orders = DB::Table('reservations')
+        $orders = DB::Table('order_toppings')
             ->where('created_at', '>=', $date_start)
             ->where('created_at', '<', $date_end)
             ->where('status', '!=', 'Pending')
@@ -23,7 +23,7 @@ class ReservationsExport implements FromArray
             
         $download = [];
         foreach ($orders as $order) {
-            $order = DB::Table('reservations')
+            $order = DB::Table('orders')
                 ->where('id', $order->id)
                 ->first();
                     
@@ -31,12 +31,16 @@ class ReservationsExport implements FromArray
                 ->where('id', $order->user_id)
                 ->first();
                 
+            $totalQty = DB::Table('order_topping_items')
+                ->where('invoice', $order->invoice)
+                ->count();
+
             $download[] = [
                 'created_at' => $order->created_at,
                 'invoice' =>  $order->invoice,
                 'user' => $user->name,
-                'reservation_date' => $order->reservation_date,
-                'reservation_time' => $order->reservation_time,
+                'table' => $order->table,
+                'jumlah' => $totalQty,
                 'total' => $order->total,
                 'status' => $order->status,
             ];
@@ -45,3 +49,4 @@ class ReservationsExport implements FromArray
         return $download;
     }
 }
+
