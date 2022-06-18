@@ -20,4 +20,25 @@ class UserHistoryOrderToppingController extends Controller
 
         return view('history-order-topping', ['orders' => $orders, 'invoice' => '']);
     }
+    
+    public function search(Request $request)
+    {
+        if ($request->invoice) {
+            $orders = DB::table('order_toppings')
+                ->where('user_id', session()->get('user_id'))
+                ->where('status', '!=', 'Pending')
+                ->where('invoice', $request->invoice)
+                ->get();
+        } else {
+            $orders = DB::table('order_toppings')
+                ->where('user_id', session()->get('user_id'))
+                ->where('status', '!=', 'Pending')
+                ->get();
+        }
+        
+        return view('history-order-topping', [
+            'orders' => $orders,
+            'invoice' => $request->invoice
+        ]);
+    }
 }

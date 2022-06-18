@@ -14,9 +14,17 @@ class UserInvoiceController extends Controller
             return view('auth.login');
         }
         
-        $order = DB::table('orders')->where('invoice', $invoice)->first();
-        $orderMenu = DB::table('order_menus')->where('invoice', $invoice)->first();
-        $orderMenus = DB::table('order_menus')->where('invoice', $invoice)->get();
+        $order = DB::table('orders')
+            ->where('invoice', $invoice)
+            ->first();
+
+        $orderMenu = DB::table('order_menus')
+            ->where('invoice', $invoice)
+            ->first();
+
+        $orderMenus = DB::table('order_menus')
+            ->where('invoice', $invoice)
+            ->get();
 
         $user = DB::table('users')
             ->where('id', $order->user_id)
@@ -70,9 +78,10 @@ class UserInvoiceController extends Controller
 
             if ($json->payment_type == 'bank_transfer' && $json->transaction_status == 'settlement') {
 
-                $update = DB::table('orders')->where('invoice', $invoice)
-                ->update([
-                    'status' => 'Sudah Dibayar',
+                $update = DB::table('orders')
+                    ->where('invoice', $invoice)
+                    ->update([
+                        'status' => 'Sudah Dibayar',
                 ]);
             }
 

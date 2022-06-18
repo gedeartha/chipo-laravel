@@ -11,8 +11,8 @@
                     <div class="flex justify-between">
 
                         <div class="text-lg font-bold text-primary">Riwayat Pesanan</div>
-
-                        <form method="POST" action="{{ route('history.search') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('history-order-topping.search') }}"
+                            enctype="multipart/form-data">
                             @csrf
 
                             <div class="flex space-x-2">

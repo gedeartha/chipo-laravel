@@ -17,10 +17,6 @@ class UserInvoiceToppingController extends Controller
         $order = DB::table('order_toppings')
             ->where('invoice', $invoice)
             ->first();
-
-        $user = DB::table('users')
-            ->where('id', $order->user_id)
-            ->first();
         
         $orderItems = DB::table('order_topping_items')
             ->where('invoice', $invoice)
@@ -29,6 +25,10 @@ class UserInvoiceToppingController extends Controller
         $orderItemsCount = DB::table('order_topping_items')
             ->where('invoice', $order->invoice)
             ->count();
+
+        $user = DB::table('users')
+            ->where('id', $order->user_id)
+            ->first();
 
         // Set your Merchant Server Key
         \Midtrans\Config::$serverKey = 'SB-Mid-server-IK-LC0zAW-djydF887uRncFK';
@@ -76,7 +76,7 @@ class UserInvoiceToppingController extends Controller
 
             if ($json->payment_type == 'bank_transfer' && $json->transaction_status == 'settlement') {
 
-                $update = DB::table('orders')
+                $update = DB::table('order_toppings')
                     ->where('invoice', $invoice)
                     ->update([
                         'status' => 'Sudah Dibayar',

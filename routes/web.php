@@ -98,7 +98,7 @@ Route::get('history-reservation', [UserHistoryReservationController::class, 'ind
 Route::post('history-reservation', [UserHistoryReservationController::class, 'search'])->name('history.reservation.search');
 
 Route::get('history-order-topping', [UserHistoryOrderToppingController::class, 'index'])->name('history-order-topping.index');
-// Belum isi search
+Route::post('history-order-topping', [UserHistoryOrderToppingController::class, 'search'])->name('history-order-topping.search');
 
 Route::get('admin/', function () {
     return redirect('admin/login');

@@ -23,7 +23,7 @@ class OrderToppingsExport implements FromArray
             
         $download = [];
         foreach ($orders as $order) {
-            $order = DB::Table('orders')
+            $order = DB::Table('order_toppings')
                 ->where('id', $order->id)
                 ->first();
                     
