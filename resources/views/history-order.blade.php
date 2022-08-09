@@ -16,7 +16,8 @@
                             @csrf
 
                             <div class="flex space-x-2">
-                                <input type="number" id="text" name="invoice" value="{{ old('invoice', $invoice) }}"
+                                <input type="number" id="text" name="invoice"
+                                    value="{{ old('invoice', $invoice) }}"
                                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
                                     placeholder="Cari ID Pesanan">
                                 <button
@@ -64,7 +65,8 @@
                                 @forelse ($orders as $order)
                                     <tr
                                         class="border-b odd:bg-white even:bg-gray-50 odd:dark:bg-gray-800 even:dark:bg-gray-700">
-                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                                        <th scope="row"
+                                            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                             #{{ $order->invoice }}
                                         </th>
                                         <td class="px-6 py-4">

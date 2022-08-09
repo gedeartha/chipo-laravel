@@ -149,8 +149,7 @@
 
                                         <div class="flex justify-between items-center">
                                             <div class="ml-5">
-                                                <a
-                                                    href="{{ $order->invoice }}/update?invoice={{ $order->invoice }}">
+                                                <a href="{{ $order->invoice }}/update?invoice={{ $order->invoice }}">
                                                     <x-button>
                                                         Cash
                                                     </x-button>
@@ -161,7 +160,7 @@
                                                 <div class="mr-5">
                                                     <button id="pay-button"
                                                         class="py-2.5 px-5 text-center text-sm font-bold text-white focus:outline-none shadow-lg bg-tertiary rounded-full hover:bg-gray-100 hover:text-blue-700 border hover:border-tertiary">
-                                                        Bayar Sekarang
+                                                        Transfer
                                                     </button>
                                                 </div>
                                             @endif

@@ -70,10 +70,10 @@
                             </div>
 
                             @if ($reservation->status == 'Belum Dibayar')
-                                <div class="mt-4">
+                                <div class="mt-5">
                                     <button id="pay-button"
                                         class="py-2.5 px-5 text-center text-sm font-bold text-white focus:outline-none shadow-lg bg-tertiary rounded-full hover:bg-gray-100 hover:text-blue-700 border hover:border-tertiary">
-                                        Bayar Sekarang
+                                        Transfer
                                     </button>
                                 </div>
                             @endif
@@ -83,6 +83,13 @@
                                 <input type="hidden" name="invoice" value="{{ $reservation->invoice }}">
                                 <input type="hidden" name="json" id="json_callback">
                             </form>
+
+                            <div class="text-sm text-gray-500 mt-4 text-left">
+                                <p>Ketentuan : </p>
+                                - Jika lebih dari 30 menit setelah jam reservasi Anda belum berada di lokasi, maka
+                                reservasi
+                                anggap dianggap hangus dan meja dapat digunakan oleh pelanggan lain.
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -47,22 +47,31 @@ class UserCheckoutToppingController extends Controller
 
     public function update(Request $request)
     {
-        $invoice = session()->get('invoice');
-        
-        $update = DB::table('order_toppings')
-            ->where('invoice', $invoice)
-            ->update([
-                'status' => 'Belum Dibayar',
-                'total' => $request->total,
-            ]);
-        
-        if ($update) {
-            return redirect()
-            ->route('invoice-topping', $invoice)
-            ->with([
-                'success' => 'Topping berhasil ditambahkan.'
-            ]);
+
+        if ($request->total >= 10000) {
+            $invoice = session()->get('invoice');
             
+            $update = DB::table('order_toppings')
+                ->where('invoice', $invoice)
+                ->update([
+                    'status' => 'Belum Dibayar',
+                    'total' => $request->total,
+                ]);
+            
+            if ($update) {
+                return redirect()
+                ->route('invoice-topping', $invoice)
+                ->with([
+                    'success' => 'Topping berhasil ditambahkan.'
+                ]);
+                
+            }
+        } else {
+            return redirect()
+                ->route('order-topping')
+                ->with([
+                        'success' => 'Silahkan tambahkan topping. Minimal pemesanan topping adalah Rp 10.000'
+                ]);
         }
         
     }

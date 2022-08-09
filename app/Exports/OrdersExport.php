@@ -4,12 +4,39 @@ namespace App\Exports;
 
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromArray;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 
-class OrdersExport implements FromArray
+use Maatwebsite\Excel\Concerns\WithStyles;
+use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+
+use Maatwebsite\Excel\Concerns\ShouldAutoSize;
+
+class OrdersExport implements FromArray, WithHeadings, WithStyles, ShouldAutoSize
 {
     /**
     * @return \Illuminate\Support\Collection
     */
+    public function headings(): array
+    {
+        return [
+            'Tanggal',
+            'Invoice',
+            'Pembeli',
+            'No. Meja',
+            'Jumlah',
+            'Total',
+            'Status',
+        ];
+    }
+    
+    public function styles(Worksheet $sheet)
+    {
+        return [
+            // Style the first row as bold text.
+            1    => ['font' => ['bold' => true]],
+        ];
+    }
+
     public function array(): array
     {
         $date_start = session()->get('date_start');

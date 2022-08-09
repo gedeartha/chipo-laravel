@@ -23,7 +23,7 @@ class UserReservationCheckoutController extends Controller
             ->where('invoice', session()->get('invoiceReservation'))
             ->count();
             
-            $totalPayment = $totalReservation * 5500;
+            $totalPayment = $totalReservation * 10000;
             
             return view('reservasi-checkout', [
                 'reservationTables' => $reservationTables,
@@ -40,7 +40,7 @@ class UserReservationCheckoutController extends Controller
         ->where('invoice', session()->get('invoiceReservation'))
         ->count();
         
-        $totalPayment = $totalReservation * 5500;
+        $totalPayment = $totalReservation * 10000;
 
         DB::table('reservations')
         ->where('invoice', $invoice)
